@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const RecuiterReg = () => {
+const RecruiterReg = () => {
   const [showPassword, setShowPassword] = useState(false)
 
   const togglePasswordVisibility = () => {
@@ -86,4 +86,4 @@ const RecuiterReg = () => {
   )
 }
 
-export default RecuiterReg
+export default RecruiterReg

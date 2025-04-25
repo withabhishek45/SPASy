@@ -1,15 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext'
 
 const StudentLogin = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
+  const { login } = useContext(AuthContext)
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // Add login validation logic here
+    // For now, just set user info and redirect to student dashboard
+    const userData = { name: 'Student User', role: 'student' }
+    login(userData)
+    alert('Login successful!')
+    navigate('/student/dashboard')
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <form className="bg-gray-800 p-8 rounded shadow-md w-full max-w-md text-white">
+      <form onSubmit={handleSubmit} className="bg-gray-800 p-8 rounded shadow-md w-full max-w-md text-white">
         <h2 className="text-2xl font-bold mb-6 text-center">Student Login</h2>
         <div className="mb-4">
           <label htmlFor="email" className="block mb-2 font-semibold">Email</label>
