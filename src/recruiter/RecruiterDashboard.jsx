@@ -1,8 +1,15 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const RecruiterDashboard = () => {
+  const navigate = useNavigate()
+
   const handleEditProfile = () => {
-    window.location.href = '/recruiter/profile'
+    navigate('/recruiter/profile')
+  }
+
+  const handleAddJobPost = () => {
+    navigate('/recruiter/jobpost')
   }
 
   return (
@@ -11,7 +18,11 @@ const RecruiterDashboard = () => {
 
       <section className="bg-gray-800 bg-opacity-70 rounded-lg p-6 shadow-lg">
         <h2 className="text-3xl font-semibold mb-6 border-b border-green-400 pb-2">Job Postings Management</h2>
-        <button className="mb-4 px-6 py-3 bg-green-600 rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md">
+        <button
+          type="button"
+          onClick={handleAddJobPost}
+          className="mb-4 px-6 py-3 bg-green-600 rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md"
+        >
           Add New Job Posting
         </button>
         <ul className="space-y-3 text-lg">
@@ -19,6 +30,17 @@ const RecruiterDashboard = () => {
           <li className="bg-green-900 bg-opacity-50 p-4 rounded-lg shadow-inner">Backend Developer - Closed</li>
           <li className="bg-green-900 bg-opacity-50 p-4 rounded-lg shadow-inner">Data Scientist - Open</li>
         </ul>
+      </section>
+      <section className="bg-gray-800 bg-opacity-70 rounded-lg p-6 shadow-lg">
+        <h2 className="text-3xl font-semibold mb-6 border-b border-green-400 pb-2">Job Post</h2>
+        <p className="text-lg">You can post new jobs using the "Add New Job Posting" button above.</p>
+        <button
+          type="button"
+          onClick={handleAddJobPost}
+          className="mt-4 px-6 py-3 bg-green-600 rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md"
+        >
+          Go to Job Posting Page
+        </button>
       </section>
 
       <section className="bg-gray-800 bg-opacity-70 rounded-lg p-6 shadow-lg">
@@ -54,3 +76,4 @@ const RecruiterDashboard = () => {
 }
 
 export default RecruiterDashboard
+

@@ -6,13 +6,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user } = useContext(AuthContext)
 
   if (!user) {
-    // Not logged in, redirect to home or login
-    return <Navigate to="/" replace />
+    // Not logged in, redirect to recruiter login page
+    return <Navigate to="/login/recruiter" replace />
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // User role not authorized, redirect to home or login
-    return <Navigate to="/" replace />
+    // User role not authorized, redirect to recruiter login page
+    return <Navigate to="/login/recruiter" replace />
   }
 
   // Authorized, render children

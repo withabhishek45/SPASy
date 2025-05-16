@@ -5,6 +5,7 @@ import Login from './Login'
 import RecruiterReg from './recruiter/RecruiterReg'
 import StudentReg from './student/StudentReg'
 import RecruiterDashboard from './recruiter/RecruiterDashboard'
+import JobPost from './recruiter/JobPost'
 import StudentDashboard from './student/StudentDashboardNew'
 import StudentLogin from './student/StudentLogin'
 import RecruiterLogin from './recruiter/RecruiterLogin'
@@ -48,6 +49,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['recruiter']}>
                   <RecruiterDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/recruiter/jobpost"
+              element={
+                <ProtectedRoute allowedRoles={['recruiter']}>
+                  <JobPost />
                 </ProtectedRoute>
               }
             />
