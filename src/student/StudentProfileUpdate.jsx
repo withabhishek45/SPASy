@@ -4,17 +4,27 @@ import { AuthContext } from '../context/AuthContext'
 const StudentProfileUpdate = () => {
   const { user, login } = useContext(AuthContext)
   const [formData, setFormData] = useState({
-    name: '',
+    fname: '',
+    lname: '',
     email: '',
     password: '',
+    phone: '',
+    gender: '',
+    course: '',
+    year: ''
   })
 
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.name || '',
+        fname: user.fname || '',
+        lname: user.lname || '',
         email: user.email || '',
         password: '',
+        phone: user.phone || '',
+        gender: user.gender || '',
+        course: user.course || '',
+        year: user.year || ''
       })
     }
   }, [user])
@@ -24,11 +34,26 @@ const StudentProfileUpdate = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const updatedUser = { ...user, ...formData }
-    login(updatedUser)
-    alert('Student profile updated successfully!')
+    try {
+      const response = await fetch('/student/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      const data = await response.json()
+      if (response.ok && data.success) {
+        login(data.data) // update context with updated student data
+        alert('Student profile updated successfully!')
+      } else {
+        alert('Failed to update profile: ' + (data.message || 'Unknown error'))
+      }
+    } catch (error) {
+      alert('Error updating profile: ' + error.message)
+    }
   }
 
   return (
@@ -36,12 +61,24 @@ const StudentProfileUpdate = () => {
       <h2 className="text-2xl font-bold mb-6">Update Student Profile</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block mb-1 font-semibold" htmlFor="name">Name</label>
+          <label className="block mb-1 font-semibold" htmlFor="fname">First Name</label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="fname"
+            name="fname"
+            value={formData.fname}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="lname">Last Name</label>
+          <input
+            type="text"
+            id="lname"
+            name="lname"
+            value={formData.lname}
             onChange={handleChange}
             className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
@@ -68,6 +105,50 @@ const StudentProfileUpdate = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter new password"
+            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="phone">Phone</label>
+          <input
+            type="text"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="gender">Gender</label>
+          <input
+            type="text"
+            id="gender"
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="course">Course</label>
+          <input
+            type="text"
+            id="course"
+            name="course"
+            value={formData.course}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="year">Year</label>
+          <input
+            type="text"
+            id="year"
+            name="year"
+            value={formData.year}
+            onChange={handleChange}
             className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

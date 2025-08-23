@@ -1,7 +1,45 @@
 import React, { useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const StudentReg = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMessage('')
+    const formData = new FormData(e.target)
+    const data = {
+      fullName: formData.get('fullName'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      confirmPassword: formData.get('confirmPassword'),
+    }
+
+    if (data.password !== data.confirmPassword) {
+      setErrorMessage('Passwords do not match.')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const response = await axios.post('/api/students/register', data)
+      if (response.data.success) {
+        alert('Registration successful! Redirecting to login page...')
+        navigate('/login/student')
+      } else {
+        setErrorMessage(response.data.message || 'Registration failed. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error during registration:', error)
+      setErrorMessage('Something went wrong. Please try again later.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
@@ -9,8 +47,10 @@ const StudentReg = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <form className="bg-gray-800 p-8 rounded shadow-md w-full max-w-md text-white">
+      <form onSubmit={handleSubmit} className="bg-gray-800 p-8 rounded shadow-md w-full max-w-md text-white">
         <h2 className="text-2xl font-bold mb-6 text-center">Student Registration</h2>
+        {errorMessage && <div className="mb-4 text-red-500 font-semibold">{errorMessage}</div>}
+
         <div className="mb-4">
           <label htmlFor="fullName" className="block mb-2 font-semibold">Full Name</label>
           <input
@@ -22,6 +62,7 @@ const StudentReg = () => {
             required
           />
         </div>
+
         <div className="mb-4">
           <label htmlFor="email" className="block mb-2 font-semibold">Email</label>
           <input
@@ -33,6 +74,7 @@ const StudentReg = () => {
             required
           />
         </div>
+
         <div className="mb-4 relative">
           <label htmlFor="password" className="block mb-2 font-semibold">Password</label>
           <input
@@ -51,57 +93,25 @@ const StudentReg = () => {
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
-        <div className="mb-4">
-          <label htmlFor="gender" className="block mb-2 font-semibold">Gender</label>
-          <select
-            id="gender"
-            name="gender"
+
+        <div className="mb-6">
+          <label htmlFor="confirmPassword" className="block mb-2 font-semibold">Confirm Password</label>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm your password"
             className="w-full px-3 py-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
-          >
-            <option value="">Select gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
+          />
         </div>
-        <div className="mb-4">
-          <label htmlFor="course" className="block mb-2 font-semibold">Course</label>
-          <select
-            id="course"
-            name="course"
-            className="w-full px-3 py-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select course</option>
-            <option value="cs">Computer Science</option>
-            <option value="mech">Mechanical Engineering</option>
-            <option value="ee">Electrical Engineering</option>
-            <option value="civil">Civil Engineering</option>
-            <option value="ba">Business Administration</option>
-            <option value="bca">BCA</option>
-            <option value="bfs">BFS</option>
-            <option value="mfs">MFS</option>
-          </select>
-        </div>
-        <div className="mb-6">
-          <label htmlFor="year" className="block mb-2 font-semibold">Year</label>
-          <select
-            id="year"
-            name="year"
-            className="w-full px-3 py-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select year</option>
-            <option value="1">1st Year</option>
-            <option value="2">2nd Year</option>
-            <option value="3">3rd Year</option>
-            <option value="4">4th Year</option>
-          </select>
-        </div>
+
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition-colors"
+          disabled={isSubmitting}
+          className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          Register
+          {isSubmitting ? 'Registering...' : 'Register'}
         </button>
       </form>
     </div>
